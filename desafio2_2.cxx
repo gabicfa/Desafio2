@@ -1,6 +1,4 @@
 #include<iostream>
-#include <list>
-
 #include "grafo.cxx"
 
 int main(){

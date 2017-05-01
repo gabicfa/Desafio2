@@ -3,11 +3,9 @@
 #ifndef GRAFO_HXX
 #define GRAFO_HXX
 
-
 class Grafo
 {
 	int n_academicos;
-	// std::vector<int> *conexoes;
 
 public:
   std::vector<int> *conexoes;
