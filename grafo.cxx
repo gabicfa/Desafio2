@@ -8,5 +8,10 @@ Grafo::Grafo(int n_academicos){
 }
 
 void Grafo::adicionarConexoes(int academico2, int academico1) {
-  conexoes[academico1].push_back(academico2);
+  if(academico1<academico2){
+    conexoes[academico2].push_back(academico1);
+  }
+  else{
+    conexoes[academico1].push_back(academico2);
+  }
 }
