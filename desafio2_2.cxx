@@ -25,8 +25,11 @@ int main(){
   }
 
   int visitados[n_academicos];
+  int menor_distancia[n_academicos];
+
   for (size_t i = 0; i < n_academicos; i++) {
     visitados[i] = -1;
+    menor_distancia[i]= 0;
   }
 
   int fila[n_academicos];
@@ -48,6 +51,12 @@ int main(){
     while (inic!=fim) {
       inic = (inic + 1) % n_academicos;
       node = fila[inic];
+
+
+      if(grafo.conexoes[node].size() == 0){
+        menor_distancia[a] = cont;
+      }
+
       cont++;
 
       for (int i = 0; i < grafo.conexoes[node].size(); i++) {
@@ -56,18 +65,23 @@ int main(){
           fila[fim] = grafo.conexoes[node][i];
           visitados[grafo.conexoes[node][i]] = cont;
         }
+        else{
+          cont+=menor_distancia[grafo.conexoes[node][i]];
+          if(menor_distancia[a]==0){
+            menor_distancia[a] = cont;
+          }
+          else if(cont< menor_distancia[a]){
+            menor_distancia[a] = cont;
+          }
+        }
       }
     }
 
-    std::cout << academicos[a] << ": " << visitados[0] <<'\n';
-
+    std::cout << academicos[a] << ": " << menor_distancia[a] <<'\n';
+    
     inic = 0;
     fim = 0;
     cont = 0;
-
-    for (size_t i = 0; i < n_academicos; i++) {
-      visitados[i] = -1;
-    }
   }
   return 0;
 }
