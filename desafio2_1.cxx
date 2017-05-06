@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <vector>
 
 # define VAZIO -4
 
@@ -12,26 +13,75 @@ int main() {
 
   char variaveis[n_variaveis];
 
-  for (size_t i = 0; i < n_variaveis; i++) { //Coloca variaveis em uma lista (variaveis)
+  for (size_t i = 0; i < n_variaveis; i++) {
     std::cin >> variaveis[i];
   }
 
   std::cin >> descricao;
   int size = descricao.size();
-  int descricao_v[size];//cria um lista(descricao_v) com o mesmo tamanho da string (descricao)
+  int descricao_v[size];
+  std::vector<std::vector<char> > descricao_VV(size, std::vector<char>(1));
 
-  for (size_t i = 0; i < size; i++) {//descricao_v é uma "traducao" da string para int
-    if (descricao[i] == '^'){ // simbolos sao numeros menores que 0
+  for (size_t i = 0; i < size; i++) {
+    descricao_VV[i][0] = descricao[i];
+  }
+/* ----------------MODIFICAÇĀO--------------------*/
+  char s;
+  int l = 2;
+  for (size_t i = 0; i < size; i++) {
+    if (descricao_VV[i][0] == '^' || descricao_VV[i][0] == '&' ||  descricao_VV[i][0] == '|') {
+      s = descricao_VV[i][0];
+
+      if(i != size-1) {
+        descricao_VV[i][0]='(';
+      }
+
+      if(descricao_VV[i-l][0]=='-') {
+        while(descricao_VV[i-l][0]=='-') {
+          l++;
+        }
+      }
+
+      if(i != size-1) {
+        descricao_VV[i].insert(descricao_VV[i].end(), descricao_VV[i-l].begin(), descricao_VV[i-l].end());
+      }
+
+      else{
+        descricao_VV[i] = descricao_VV[i-l];
+      }
+
+      descricao_VV[i-l][0] = '-';
+      descricao_VV[i].push_back(s);
+      descricao_VV[i].insert(descricao_VV[i].end(), descricao_VV[i-1].begin(), descricao_VV[i-1].end());
+      descricao_VV[i-1][0] = '-';
+
+      if(i != size-1) {
+        descricao_VV[i].push_back(')');
+      }
+      l=2;
+    }
+  }
+
+  for (size_t i = 0; i < descricao_VV[size-1].size(); i++) {
+    std::cout << descricao_VV[size-1][i];
+  }
+
+  std::cout << '\n';
+
+  /* ----------------MODIFICAÇĀO--------------------*/
+
+  for (size_t i = 0; i < size; i++) {
+    if (descricao[i] == '^') {
       descricao_v[i] = -1;
     }
-    else if (descricao[i] == '&'){
+    else if (descricao[i] == '&') {
       descricao_v[i] = -2;
     }
-    else if (descricao[i] == '|'){
+    else if (descricao[i] == '|') {
       descricao_v[i] = -3;
     }
     else{
-      for (size_t j = 0; j < n_variaveis; j++) { // variaveis sao o seu indice na lista "variaveis"
+      for (size_t j = 0; j < n_variaveis; j++) {
         if (descricao[i]==variaveis[j]) {
           descricao_v[i] = j;
           break;
@@ -42,17 +92,16 @@ int main() {
 
   std::cin >> m_entrada;
   std::cout << m_entrada << '\n';
-  int v_subs[size];// cria lista para fazer as operacoes
-
-  for (size_t i = 0; i < m_entrada; i++) {// a cada linha da entrada
-    for (size_t j = 0; j < n_variaveis; j++){
+  int v_subs[size];
+  for (size_t i = 0; i < m_entrada; i++) {
+    for (size_t j = 0; j < n_variaveis; j++) {
       std::cin >> b_entrada;
-      for (size_t k = 0; k < size; k++) {//coloca o b_entrada no v_subs correspondente ao indice do descricao_v
-        if(descricao_v[k]==j){
+      for (size_t k = 0; k < size; k++) {
+        if(descricao_v[k]==j) {
           v_subs[k] = b_entrada;
         }
-        if(descricao_v[k]<0){
-          v_subs[k] = descricao_v[k];// se nao for um bit, copia o simbolo
+        if(descricao_v[k]<0) {
+          v_subs[k] = descricao_v[k];
         }
       }
     }
@@ -60,12 +109,12 @@ int main() {
     v = 2;
     for (size_t k = 0; k < size; k++) {
       if (v_subs[k]<0) {
-        if(v_subs[k-v] == VAZIO){ //checa se as duas casas antes do simbolo sao numeros
-          while(v_subs[k-v] == VAZIO){// se nao for procura ultimo numero
+        if(v_subs[k-v] == VAZIO) {
+          while(v_subs[k-v] == VAZIO) {
             v++;
           }
         }
-        if (v_subs[k] == -1) {// faz a conta
+        if (v_subs[k] == -1) {
           v_subs[k] = v_subs[k-v] ^ v_subs[k-1];
         }
         else if (v_subs[k] == -2) {
@@ -74,12 +123,12 @@ int main() {
         else if (v_subs[k] == -3) {
           v_subs[k] = v_subs[k-v] | v_subs[k-1];
         }
-        v_subs[k-1] = VAZIO;// coloca vazio nos bits que ja fizeram conta
+        v_subs[k-1] = VAZIO;
         v_subs[k-v] = VAZIO;
       }
       v = 2;
     }
-    std::cout << v_subs[size-1] << '\n';// printa resultado para aquela linha
+    std::cout << v_subs[size-1] << '\n';
   }
   return 0;
 }

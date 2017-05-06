@@ -32,29 +32,27 @@ int main(){
     menor_distancia[i]= 0;
   }
 
+  std::vector<std::string> *conexoes_nome;
   int fila[n_academicos];
   int inic = 0;
   int fim  = 0;
   int cont = 0;
   int node;
-  int academico_avaliado;
 
   std::cout << n_academicos << '\n';
 
   for (size_t a = 0; a < n_academicos; a++) {
-
-    academico_avaliado = a;
     fim++;
-    fila[fim] = academico_avaliado;
-    visitados[academico_avaliado]=cont;
+    fila[fim] = a;
+    visitados[a]=cont;
 
     while (inic!=fim) {
       inic = (inic + 1) % n_academicos;
       node = fila[inic];
 
-
       if(grafo.conexoes[node].size() == 0){
         menor_distancia[a] = cont;
+        grafo.conexoes_nome[a].push_back(academicos[a]) ;
       }
 
       cont++;
@@ -69,16 +67,28 @@ int main(){
           cont+=menor_distancia[grafo.conexoes[node][i]];
           if(menor_distancia[a]==0){
             menor_distancia[a] = cont;
+            grafo.conexoes_nome[a]=grafo.conexoes_nome[grafo.conexoes[node][i]];
+            grafo.conexoes_nome[a].push_back(academicos[a]);
           }
           else if(cont< menor_distancia[a]){
             menor_distancia[a] = cont;
+            grafo.conexoes_nome[a]=grafo.conexoes_nome[grafo.conexoes[node][i]];
+            grafo.conexoes_nome[a].push_back(academicos[a]);
           }
         }
       }
     }
 
-    std::cout << academicos[a] << ": " << menor_distancia[a] <<'\n';
-    
+    for (size_t k = 0; k < grafo.conexoes_nome[a].size(); k++){
+      if(k != grafo.conexoes_nome[a].size() - 1){
+        std::cout << grafo.conexoes_nome[a][k] << " -> "  ;
+      }
+      else{
+        std::cout << grafo.conexoes_nome[a][k] << ": " ;
+      }
+    }
+
+    std::cout << menor_distancia[a] <<'\n';
     inic = 0;
     fim = 0;
     cont = 0;

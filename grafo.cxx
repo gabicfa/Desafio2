@@ -5,6 +5,7 @@
 Grafo::Grafo(int n_academicos){
   this->n_academicos= n_academicos;
   conexoes = new std::vector<int>[n_academicos];
+  conexoes_nome = new std::vector<std::string> [n_academicos];
 }
 
 void Grafo::adicionarConexoes(int academico2, int academico1) {
