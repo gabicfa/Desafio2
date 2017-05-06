@@ -25,6 +25,7 @@ int main() {
   for (size_t i = 0; i < size; i++) {
     descricao_VV[i][0] = descricao[i];
   }
+
   /* ----------------MODIFICAÇĀO--------------------*/
   char s;
   int l = 2;
@@ -67,7 +68,6 @@ int main() {
   }
 
   std::cout << '\n';
-
   /* ----------------MODIFICAÇĀO--------------------*/
 
   for (size_t i = 0; i < size; i++) {
